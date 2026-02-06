@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900&display=swap"
+    />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Toolify | Extension</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./assets/css/toolify.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <div
+      class="offer-reminder-alert"
+      id="offerReminderAlert"
+      style="display: none"
+    >
+      <div class="alert-content">
+        <svg
+          width="18"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#FFD110"
+          class="size-6"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span id="offerReminderText">Langganan berakhir dalam</span>
+        <span class="timer-display" id="subscriptionCountdown">7d 12h 30m</span>
+      </div>
+      <div class="alert-close" id="closeOfferAlert">
+        <svg
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <div class="offer-reminder-modal-compact" id="offerReminderModal">
+      <div class="modal-header-compact">
+        <div class="modal-title">
+          <span id="offerModalTitle"></span>
+        </div>
+        <div class="modal-close" id="closeOfferReminderModal">
+          <i class="fa-solid fa-times"></i>
+        </div>
+      </div>
+      <div class="modal-content-compact" id="offerModalContent"></div>
+      <div class="modal-actions-compact">
+        <button class="modal-btn secondary" id="copyCodeBtn">
+          <i class="fa-solid fa-copy"></i> Copy Code
+        </button>
+        <button class="modal-btn primary" id="useNowBtn">
+          <i class="fa-solid fa-rocket"></i> Gunakan
+        </button>
+      </div>
+    </div>
+
+    <div id="alertToastContainer"></div>
+
+    <header class="sticky-top shadow">
+      <div class="header">
+        <div class="logo">
+          <img src="./assets/images/logo.png" />
+          <span class="version">v2.4.0</span>
+        </div>
+
+        <div class="header-actions">
+          <div class="social-icons">
+            <div class="telegram-btn" target="_blank" id="telegramLink">
+              <i class="fa-brands fa-telegram"></i>
+              <span>Join Telegram</span>
+            </div>
+          </div>
+          <!-- Quick Social Media Access -->
+          <div class="social-icons">
+            <div class="social-icon" id="instagramLink" title="Instagram">
+              <svg
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+                class="ionicon"
+                viewBox="0 0 512 512"
+                fill="#fff"
+              >
+                <path
+                  d="M349.33 69.33a93.62 93.62 0 0193.34 93.34v186.66a93.62 93.62 0 01-93.34 93.34H162.67a93.62 93.62 0 01-93.34-93.34V162.67a93.62 93.62 0 0193.34-93.34h186.66m0-37.33H162.67C90.8 32 32 90.8 32 162.67v186.66C32 421.2 90.8 480 162.67 480h186.66C421.2 480 480 421.2 480 349.33V162.67C480 90.8 421.2 32 349.33 32z"
+                />
+                <path
+                  d="M377.33 162.67a28 28 0 1128-28 27.94 27.94 0 01-28 28zM256 181.33A74.67 74.67 0 11181.33 256 74.75 74.75 0 01256 181.33m0-37.33a112 112 0 10112 112 112 112 0 00-112-112z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div
+            class="header-icon notification-btn"
+            title="Notifications"
+            id="notficationIconButton"
+          >
+            <svg
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#fff"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+              />
+            </svg>
+
+            <div class="notification-badge d-none"></div>
+          </div>
+
+          <div
+            class="header-icon check-accuracy-btn"
+            title="Check Accuracy"
+            id="checkAccuracyButton"
+          >
+            <svg
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#fff"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="notification-dropdown" id="notificationDropdown"></div>
+
+      <div class="notification-modal" id="notificationModal">
+        <div class="modal-header">
+          <div class="modal-title" id="modalTitle">
+            <span id="modalIcon">
+              <i class="fa-solid fa-bell" style="color: #f8f9fa"></i>
+            </span>
+            <span id="modalTitleText"></span>
+          </div>
+          <div class="modal-close" id="closeModalNotification">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#05EB13"
+              class="size-6"
+              width="18"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="modal-content" id="modalContent"></div>
+      </div>
+
+      <div class="last-used-header" id="lastUsedHeader">
+        <div class="last-used-content">
+          <div class="last-used-info">
+            <span class="last-used-app-name" id="lastUsedAppName"></span>
+            <!-- Account Data Preview Component -->
+            <div class="last-used-credentials" id="lastUsedCredentials">
+              <div class="credential-row" id="credentialRow">
+                <span class="credential-label">Data:</span>
+                <span class="credential-inline-data">
+                  <span
+                    class="credential-value clickable"
+                    id="lastUsedEmail"
+                    data-clipboard="email"
+                    title="Click to copy email"
+                    >user@email.com</span
+                  >
+                  <span class="credential-separator">|</span>
+                  <span
+                    class="credential-value clickable"
+                    id="lastUsedPassword"
+                    data-clipboard="password"
+                    title="Click to copy password"
+                    >password123</span
+                  >
+                </span>
+              </div>
+
+              <!-- Account Data Row (untuk kondisi account_data saja) -->
+              <div
+                class="account-data-row"
+                id="accountDataRow"
+                style="display: none"
+              >
+                <span class="credential-label">Akun Data:</span>
+                <span
+                  class="account-data-value clickable"
+                  id="lastUsedAccountData"
+                  data-clipboard="account_data"
+                  title="Click to copy account data"
+                  >85932165923</span
+                >
+              </div>
+
+              <!-- No Account Message -->
+              <div
+                class="no-account-message"
+                id="noAccountMessage"
+                style="display: none"
+              >
+                Service ini tidak memiliki data akun
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-section" id="searchSection">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <input
+            type="text"
+            class="search-bar search-bar-with-dropdown"
+            id="appSearch"
+            autocomplete="off"
+            placeholder="Cari layanan..."
+            style="flex: 1; min-width: 0"
+          />
+          <!-- Dropdown Component (adjusted) -->
+          <div class="custom-dropdown" id="searchDropdown">
+            <button
+              class="dropdown-toggle-btn search-dropdown-btn"
+              id="dropdownToggleBtn"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>All</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu-list" id="dropdownMenuList">
+              <div class="dropdown-menu-item active" data-value="all">All</div>
+              <div class="dropdown-menu-item" data-value="expired">Expired</div>
+              <div class="dropdown-menu-item" data-value="active">Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Last Used Application Header -->
+    </header>
+
+    <div class="card text-center card-body gpy">
+      <div id="loading" class="full-page-container fadeIn d-none">
+        <div class="bouncing-loader">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+
+      <div id="loaded" class="mt-4 pb-3 row menu fadeIn"></div>
+      <div id="variantNavigation" class="breadcrumb-navigation d-none">
+        <div class="breadcrumb-container">
+          <!-- Left Group: Navigation -->
+          <div class="breadcrumb-nav-group">
+            <button id="backButton" class="breadcrumb-item home">
+              <i class="fa-solid fa-home"></i>
+              <span>Kembali</span>
+            </button>
+            <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+            <div class="breadcrumb-item current">
+              <i class="fa-solid fa-folder-open"></i>
+              <span id="variantCategoryName">Variant</span>
+            </div>
+          </div>
+
+          <!-- Right Group: Filter Dropdown -->
+          <div class="variant-filter-dropdown" id="variantFilterDropdown">
+            <button
+              class="dropdown-toggle-btn variant-filter-btn"
+              id="variantDropdownToggleBtn"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span>Active</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu-list" id="variantDropdownMenuList">
+              <div class="dropdown-menu-item active" data-value="active">
+                Active
+              </div>
+              <div class="dropdown-menu-item" data-value="inactive">
+                Inactive
+              </div>
+              <div class="dropdown-menu-item" data-value="expired">Expired</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="variantView">
+        <div id="variantContainer" class="row mt-4 menu"></div>
+      </div>
+
+      <!-- Check Accuracy View -->
+      <div id="checkAccuracyView" class="d-none">
+        <div id="checkAccuracyNavigation" class="breadcrumb-navigation">
+          <div class="breadcrumb-container">
+            <!-- Left Group: Navigation -->
+            <div class="breadcrumb-nav-group">
+              <button id="backToHomeFromAccuracy" class="breadcrumb-item home">
+                <i class="fa-solid fa-home"></i>
+                <span>Kembali</span>
+              </button>
+              <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+              <div class="breadcrumb-item current">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Check Accuracy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Check Accuracy Content Area -->
+        <div id="checkAccuracyContent" class="row mt-4 menu">
+          <!-- Content will be dynamically loaded here -->
+          <div class="check-accuracy-placeholder">
+            <div class="placeholder-icon">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Check Account Accuracy</h3>
+            <p>Verifikasi status akun premium Anda secara real-time</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Check Accuracy Detail View -->
+      <div id="checkAccuracyDetailView" class="d-none">
+        <!-- Compact Header with Breadcrumb + Progress -->
+        <div id="checkDetailHeader" class="check-detail-header">
+          <!-- Row 1: Breadcrumb + Action Button -->
+          <div class="header-row-main">
+            <div class="breadcrumb-nav-group">
+              <button id="backToCheckAccuracyList" class="breadcrumb-btn">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Check Accuracy</span>
+              </button>
+              <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+              <span class="breadcrumb-current" id="detailServiceName"
+                >Service Name</span
+              >
+            </div>
+            <button id="startCheckButton" class="check-action-btn primary">
+              <i class="fa-solid fa-play"></i>
+              <span>Mulai</span>
+            </button>
+          </div>
+
+          <!-- Row 2: Progress Bar (shown when checking) -->
+          <div id="checkProgressSection" class="header-progress-section d-none">
+            <div class="progress-bar-wrapper">
+              <span class="progress-label" id="progressText">0/0 (0%)</span>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Stats + Meta (shown when checking) -->
+          <div id="checkStatsSection" class="header-stats-section d-none">
+            <div class="stats-inline">
+              <span class="stat-item premium">
+                <i class="fa-solid fa-crown"></i>
+                <strong id="statPremium">0</strong>
+              </span>
+              <span class="stat-item free">
+                <i class="fa-solid fa-user"></i>
+                <strong id="statFree">0</strong>
+              </span>
+              <span class="stat-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <strong id="statLogout">0</strong>
+              </span>
+              <span class="stat-item error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <strong id="statError">0</strong>
+              </span>
+            </div>
+            <div class="meta-inline">
+              <span class="meta-item" id="progressDuration">
+                <i class="fa-solid fa-clock"></i> 0s
+              </span>
+              <span class="meta-item" id="progressEstimate">
+                <i class="fa-solid fa-hourglass-half"></i> calculating...
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results List -->
+        <div id="checkResultsList" class="check-results-list">
+          <!-- Empty state before starting -->
+          <div id="resultsEmptyState" class="results-empty-state">
+            <i class="fa-solid fa-clock"></i>
+            <p>Klik "Mulai Pengecekan" untuk memulai verifikasi akun</p>
+          </div>
+
+          <!-- Results will be dynamically loaded here -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="checkDetailLoading" class="check-detail-loading d-none">
+          <div class="bouncing-loader">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <p>Memulai pengecekan...</p>
+        </div>
+      </div>
+
+      <!-- versi sudah usang -->
+      <div id="outdated" class="modern-auth-alert d-none">
+        <div class="modern-auth-overlay">
+          <div class="modern-auth-container">
+            <div class="modern-auth-header">
+              <div class="modern-auth-icon outdated">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="modern-auth-title">Versi Ekstensi Usang</div>
+              <div class="modern-auth-subtitle">
+                Pembaruan diperlukan untuk melanjutkan
+              </div>
+            </div>
+
+            <div class="modern-auth-content">
+              <div class="modern-auth-message">
+                Versi ekstensi yang Anda gunakan sudah tidak didukung lagi.
+                Silakan perbarui ke versi terbaru untuk tetap menikmati layanan
+                Toolify dengan fitur-fitur terbaru.
+              </div>
+
+              <div class="modern-auth-features">
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-shield-virus"></i>
+                  <span>Keamanan dan stabilitas terbaru</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-rocket"></i>
+                  <span>Performa yang lebih cepat</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Fitur-fitur premium terbaru</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-bug"></i>
+                  <span>Perbaikan bug dan error</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="modern-auth-actions">
+              <a
+                href="https://toolify.id/dashboard"
+                class="modern-auth-btn primary"
+                target="_blank"
+                id="downloadUpdate"
+              >
+                <i class="fa-solid fa-download"></i>
+                Download Update
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- belum langganan -->
+      <div id="subscription-required" class="modern-auth-alert d-none">
+        <div class="modern-auth-overlay">
+          <div class="modern-auth-container">
+            <div class="modern-auth-header">
+              <div class="modern-auth-icon subscription-required">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <div class="modern-auth-title">Upgrade ke Premium</div>
+              <div class="modern-auth-subtitle">
+                Semua Applikasi Premium dalam Satu Langganan
+              </div>
+            </div>
+
+            <div class="modern-auth-content">
+              <div class="modern-auth-message">
+                Akses lebih dari 60+ applikasi premium hanya dalam satu
+                langganan.
+              </div>
+
+              <div class="modern-auth-features">
+                <div class="auth-feature-item">
+                  <i class="fa-brands fa-sketch"></i>
+                  <span>Akses 60+ aplikasi premium</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-recycle"></i>
+                  <span>Pembaruan otomatis</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-gamepad"></i>
+                  <span>Pengalaman hiburan tanpa batas</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-headset"></i>
+
+                  <span>Bantuan fast respon</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="modern-auth-actions">
+              <a
+                href="https://toolify.id/subscribe/buy"
+                class="modern-auth-btn warning"
+                target="_blank"
+                id="subscribeButton"
+              >
+                <i class="fa-solid fa-star"></i>
+                Berlangganan Sekarang
+              </a>
+            </div>
+
+            <div class="modern-auth-footer">
+              <p><i class="fa-solid fa-gift"></i> Penawaran Khusus Tersedia</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- belum login -->
+      <div id="not-logged-in" class="modern-auth-alert d-none">
+        <div class="modern-auth-overlay">
+          <div class="modern-auth-container">
+            <div class="modern-auth-header">
+              <div class="modern-auth-icon not-logged-in">
+                <i class="fa-solid fa-user-circle"></i>
+              </div>
+              <div class="modern-auth-title">Anda Belum Login</div>
+              <div class="modern-auth-subtitle">
+                Akses diperlukan untuk melanjutkan
+              </div>
+            </div>
+
+            <div class="modern-auth-content">
+              <div class="modern-auth-message">
+                Silakan login terlebih dahulu untuk menggunakan layanan premium
+                Toolify dan mengakses semua fitur yang tersedia.
+              </div>
+
+              <div class="modern-auth-features">
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <span>Akses ke 60+ tools premium</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <span>Sinkronisasi antar perangkat</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-check-circle"></i>
+                  <span>Support prioritas 24/7</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="modern-auth-actions">
+              <a
+                href="https://toolify.id/auth/login"
+                class="modern-auth-btn primary"
+                target="_blank"
+                id="loginButton"
+              >
+                <i class="fa-solid fa-sign-in-alt"></i>
+                Login Sekarang
+              </a>
+            </div>
+
+            <div class="modern-auth-footer">
+              <p>
+                Belum punya akun?
+                <a href="https://toolify.id/auth/register" target="_blank"
+                  >Daftar Sekarang</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- login perangkat lain -->
+      <div id="logged-in-other-device" class="modern-auth-alert d-none">
+        <div class="modern-auth-overlay">
+          <div class="modern-auth-container">
+            <div class="modern-auth-header">
+              <div class="modern-auth-icon logged-in-other-device">
+                <i class="fa-solid fa-shield-virus"></i>
+              </div>
+              <div class="modern-auth-title">Sesi Dipindahkan</div>
+              <div class="modern-auth-subtitle">
+                Login terdeteksi di perangkat lain
+              </div>
+            </div>
+
+            <div class="modern-auth-content">
+              <div class="modern-auth-message">
+                Silakan login kembali di perangkat ini untuk melanjutkan akses
+                ke layanan Toolify.
+              </div>
+
+              <div class="modern-auth-features">
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-lock"></i>
+                  <span>Keamanan akun terjamin</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-user-shield"></i>
+                  <span>Proteksi dari akses tidak sah</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-history"></i>
+                  <span>Log aktivitas terekam</span>
+                </div>
+                <div class="auth-feature-item">
+                  <i class="fa-solid fa-mobile-alt"></i>
+                  <span>Satu sesi aktif per akun</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="modern-auth-actions">
+              <a
+                href="https://toolify.id/auth/login"
+                class="modern-auth-btn purple"
+                target="_blank"
+                id="reloginButton"
+              >
+                <i class="fa-solid fa-sign-in-alt"></i>
+                Login Kembali
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <!-- Admin Action Buttons -->
+      <div class="admin-actions-unified" id="adminActionsUnified">
+        <button class="admin-btn expired-btn" id="expiredButton">
+          <i class="fa-solid fa-clock-four"></i>
+          <span>Expired</span>
+        </button>
+        <button class="admin-btn login-btn" id="loginAdminButton">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Update Cookie</span>
+        </button>
+        <div class="button-spacer"></div>
+        <button class="admin-btn logout-btn" id="logoutButton">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="./assets/js/jquery-3.7.1.min.js"></script>
+    <script src="./assets/js/auth.js"></script>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/ui.js"></script>
+    <script src="./assets/js/subscription.js"></script>
+  </body>
+</html>
