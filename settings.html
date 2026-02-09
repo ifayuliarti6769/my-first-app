@@ -1,0 +1,92 @@
+import React, { useState } from "react";
+import FileTabs from "./FileTabs";
+import FileUploadPanel from "./FileUploadPanel";
+import INoDocument from "../../../public/icons/no-document.svg";
+
+const UploadDocumentsTab = () => {
+  const [fileTabs, setFileTabs] = useState([]);
+  const [activeFileTabId, setActiveFileTabId] = useState(null);
+  const [nextId, setNextId] = useState(1);
+
+  const activeTab = fileTabs.find((tab) => tab.id === activeFileTabId);
+
+  const handleAddTab = () => {
+    const newTab = {
+      id: nextId,
+      name: `Document ${nextId}`,
+      files: [],
+    };
+    setFileTabs([...fileTabs, newTab]);
+    setActiveFileTabId(nextId);
+    setNextId(nextId + 1);
+  };
+
+  const handleEditTab = (tabId, newName) => {
+    setFileTabs(
+      fileTabs.map((tab) =>
+        tab.id === tabId ? { ...tab, name: newName } : tab,
+      ),
+    );
+  };
+
+  const handleDeleteTab = (tabId) => {
+    if (confirm("Are you sure you want to delete this tab?")) {
+      const newTabs = fileTabs.filter((tab) => tab.id !== tabId);
+      setFileTabs(newTabs);
+
+      // If deleting active tab, switch to first tab or null
+      if (activeFileTabId === tabId) {
+        setActiveFileTabId(newTabs.length > 0 ? newTabs[0].id : null);
+      }
+    }
+  };
+
+  const handleFilesChange = (files) => {
+    setFileTabs(
+      fileTabs.map((tab) =>
+        tab.id === activeFileTabId ? { ...tab, files } : tab,
+      ),
+    );
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      {fileTabs.length > 0 ? (
+        <>
+          {/* File Tabs */}
+          <FileTabs
+            tabs={fileTabs}
+            activeTabId={activeFileTabId}
+            onTabClick={setActiveFileTabId}
+            onAddTab={handleAddTab}
+            onEditTab={handleEditTab}
+            onDeleteTab={handleDeleteTab}
+          />
+
+          {/* Content Area */}
+          <div className="mt-4">
+            <FileUploadPanel onFilesChange={handleFilesChange} />
+          </div>
+        </>
+      ) : (
+        /* Empty State - No Tabs */
+        <div className="text-center py-12">
+          <div className="flex justify-center items-center mb-4">
+            <img src={INoDocument} width="150" alt="" />
+          </div>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            No document tabs yet. Create a tab to start uploading documents.
+          </p>
+          <button
+            onClick={handleAddTab}
+            className="px-4 py-2 bg-blue-50 border border-blue-600 hover:bg-blue-100 text-blue-600 hover:text-blue-800 rounded-lg transition-colors font-medium"
+          >
+            Create First Tab
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UploadDocumentsTab;
